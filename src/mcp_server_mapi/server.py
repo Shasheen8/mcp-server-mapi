@@ -332,8 +332,12 @@ class RunArgs(BaseModel):
 
     A non-zero exit code from `mapi run` indicates that vulnerability findings were
     present - this is not necessarily an error condition (check the stderr output).
+    Specifically the following mapping is true:
+        // - 1: Mapi found issues for the target API
+        // - 2: A mapi logic error happened (e.g: too many inconsecutive requests)
+        // - 3: An actual error (not related to mapi happened)
     Read the output reports to understand what was found and compile a security
-    report.
+    report at the end.
     """
 )
 async def mapi_run(args: RunArgs) -> str:
