@@ -56,7 +56,7 @@ class DiscoverArgs(BaseModel):
     redact_header: List[str] = Field(default_factory=list, description='--redact-header "name"...')
 
     # Target selection (mutually exclusive)
-    hosts: Optional[List[str]] = Field(None, description='-h/--hosts "host1,host2" (best option to start with, just make sure to *not* include schemes/ports/paths when specifying the option)')
+    hosts: Optional[List[str]] = Field(None, description='-h/--hosts "host1,host2" (best option to start with, just make sure to *NOT* include schemes/ports/paths when specifying the option, e.g., if the URL is https://localhost the host is just "localhost")')
     cidrs: Optional[List[str]] = Field(None, description='--cidrs "10.0.0.0/24,10.0.1.0/24"')
     domains: Optional[List[str]] = Field(None, description='--domains "example.com,foo.com"')
 
@@ -118,7 +118,18 @@ def _comma_join(values: List[str | int]) -> str:
 # -----------------------------
 # MCP tool for `mapi discover`
 # -----------------------------
-@mcp.tool(description="Run `mapi discover` with the provided options. Use `mapi discover` to discover API specifications that you can scan later on with `mapi run`.")
+@mcp.tool(
+    description="""
+    Run `mapi discover` with the provided options.
+    Use `mapi discover` to discover API specifications that you
+    can scan later on with `mapi run`.
+
+    Recommended first step is to provide `--hosts` with a comma-separated
+    list of hostnames or IPs to scan along with `--ports` for a comma-separated
+    list of ports (e.g., `80,443`).
+
+    """
+)
 async def mapi_discover(args: DiscoverArgs) -> str:
     cmd: list[str] = [MAPI_BIN, "discover"]
 
@@ -309,7 +320,22 @@ class RunArgs(BaseModel):
 # -----------------------------
 # MCP tool for `mapi run`
 # -----------------------------
-@mcp.tool(description="Run `mapi run` with the provided options. Use `mapi run` to scan an API specification and push results to the specified project/target.")
+@mcp.tool(
+    description="""
+    Run `mapi run` with the provided options.
+    Use `mapi run` to scan an API specification and push results to
+    the specified project/target. Make sure to run `mapi discover` first
+    to generate or refine your API specifications that you scan.
+
+    If you want to review findings after the scan, use the html/junit/sarif
+    options to generate reports locally.
+
+    A non-zero exit code from `mapi run` indicates that vulnerability findings were
+    present - this is not necessarily an error condition (check the stderr output).
+    Read the output reports to understand what was found and compile a security
+    report.
+    """
+)
 async def mapi_run(args: RunArgs) -> str:
     cmd: list[str] = [MAPI_BIN, "run"]
 

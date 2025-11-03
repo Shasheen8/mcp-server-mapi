@@ -40,11 +40,11 @@ async def run_cli(
         raise CLIRuntimeError(f"Command timed out after {timeout_s}s")
 
     rc = proc.returncode
-    if rc != 0:
-        snippet = (stderr or b"").decode(errors="replace")[:2000]
-        raise CLIRuntimeError(f"Command failed (exit {rc}): {snippet}", exit_code=rc)
-
-    out = (stdout or b"").decode(errors="replace")
+    out = ""
+    out += (stdout or b"").decode(errors="replace")
     if len(out.encode()) > max_bytes:
         out = out.encode()[:max_bytes].decode(errors="replace") + "\n[truncated]"
+    if rc != 0:
+        out += f"\n\n--- STDERR (exit code {rc}) ---\n"
+        out += (stderr or b"").decode(errors="replace")[:2000]
     return out
