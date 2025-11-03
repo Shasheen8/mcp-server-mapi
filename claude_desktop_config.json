@@ -8,7 +8,7 @@
         "-e",
         "MAYHEM_TOKEN=your-token-here",
         "-i",
-        "mcp-server-mapi",
+        "ghcr.io/forallsecure/mcp-server-mapi:latest",
         "uv",
         "run",
         "mcp-server-mapi",
