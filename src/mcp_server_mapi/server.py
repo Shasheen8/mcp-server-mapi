@@ -310,6 +310,8 @@ class RunArgs(BaseModel):
     p12cert: Optional[str] = None
     p12password: Optional[str] = None
 
+    process_timeout: float = Field(600.0, ge=30, description="Maximum seconds to wait for the mapi process to complete (default 600)")
+
     @field_validator("duration")
     @classmethod
     def _duration_nonempty(cls, v: str) -> str:
@@ -447,8 +449,8 @@ async def mapi_run(args: RunArgs) -> str:
 
     log.info("Running: %s", " ".join(cmd))
     try:
-        # mapi runs can be long; give them room
-        return await run_cli(cmd, timeout_s=120)  # 2 minutes cap; adjust as needed
+        # Configurable via args.process_timeout (default 600s); long scans may need more
+        return await run_cli(cmd, timeout_s=args.process_timeout)
     except CLIRuntimeError as e:
         raise RuntimeError(str(e)) from None
 
