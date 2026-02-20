@@ -231,7 +231,7 @@ class RunArgs(BaseModel):
     local: bool = Field(False, description="--local (for local scans, requires enterprise plan)")
 
     # --- simple options ---
-    url: Optional[str] = Field(None, required=True, description="--url <parsed-url> (base URL for the API, e.g., https://localhost:8000)")
+    url: str = Field(..., description="--url <parsed-url> (base URL for the API, e.g., https://localhost:8000)")
     min_request_count: Optional[int] = Field(None, ge=1)
     concurrency: Optional[int] = Field(None, ge=1)
     rate_limit: Optional[int] = Field(None, ge=1)
