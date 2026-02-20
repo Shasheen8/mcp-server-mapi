@@ -125,8 +125,8 @@ git clone git@github.com:ForAllSecure/mcp-server-mapi.git
 
 ### Run
 
-Use uv to run the MCP server for `mapi`
+Use uv to run the MCP server for `mapi`:
 
 ```sh
-uv
+MAYHEM_TOKEN=your-token-here uv run mcp-server-mapi mcp
 ```
