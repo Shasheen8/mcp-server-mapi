@@ -201,7 +201,7 @@ async def mapi_discover(args: DiscoverArgs) -> str:
     log.info("Running: %s", " ".join(cmd))
     try:
         return await run_cli(cmd, timeout_s=600.0)
-    except CLIRuntimeError as e:
+    except CLIRuntimeError as e:  # only raised on timeout, not non-zero exit
         raise RuntimeError(str(e)) from None
 
 
@@ -451,7 +451,7 @@ async def mapi_run(args: RunArgs) -> str:
     try:
         # Configurable via args.process_timeout (default 600s); long scans may need more
         return await run_cli(cmd, timeout_s=args.process_timeout)
-    except CLIRuntimeError as e:
+    except CLIRuntimeError as e:  # only raised on timeout, not non-zero exit
         raise RuntimeError(str(e)) from None
 
 
